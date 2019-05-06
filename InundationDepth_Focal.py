@@ -55,7 +55,8 @@ def main():
     OutRas = FocalStatistics(boundary, 'Circle 3 CELL', "MAXIMUM", "DATA")
     
 # the Focal Statistics loop - Number of iteration will depend on the flood inundation extent and DEM resolution - Change here!!!!
-    for i in range(3, 50):         print i
+    for i in range(3, 50):         
+	print i
         negihbor = 'Circle ' + str(i) + ' CELL'
         # negihbor = 'Rectangle ' + str(i) + ' ' + str(i) + ' CELL'
         OutRasTemp = FocalStatistics(boundary, negihbor, "MAXIMUM", "DATA")
