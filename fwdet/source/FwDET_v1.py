@@ -20,6 +20,9 @@ email: sagy.cohen@ua.edu
 web: http://sdml.ua.edu
 June 30, 2016
 
+Updated by Austin Raney
+August 19, 2019
+
 Copyright (C) 2017 Sagy Cohen
 Developer can be contacted by sagy.cohen@ua.edu and Box 870322, Tuscaloosa AL 35487 USA
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
@@ -30,13 +33,13 @@ You should have received a copy of the GNU General Public License along with thi
 import arcpy
 from arcpy.sa import *
 
-def main():
+def main(workspace_location, scratch_location, dem_name, inundation_polygon_name):
     arcpy.CheckOutExtension("Spatial") #require an ArcGIS Spatial Analyst extension
     arcpy.env.overwriteOutput = True
-    WS = arcpy.env.workspace = r'Lyons.gdb' #location of workspace (preferably a Geodatabase)
-    arcpy.env.scratchWorkspace = r'Scratch.gdb' #location of the Scratch Geodatabase (optional but highly recommended)
-    DEMname = 'Elevation'  #name of the input DEM (within the Workspace)
-    InundPolygon = 'FloodExtent' #name of the input Inundation extent polygon layer (within the Workspace)
+    WS = arcpy.env.workspace = r'{}'.format(workspace_location) #location of workspace (preferably a Geodatabase)
+    arcpy.env.scratchWorkspace = r'{}'.format(scratch_location) #location of the Scratch Geodatabase (optional but highly recommended)
+    DEMname = dem_name #name of the input DEM (within the Workspace)
+    InundPolygon = inundation_polygon_name #name of the input Inundation extent polygon layer (within the Workspace)
     ClipDEM = 'dem_clip' #name of the output clipped DEM (clipped by the inundation polygon extent)
 
     dem = arcpy.Raster(DEMname)
@@ -85,4 +88,6 @@ def CalculateBoundary(dem, InundPolygon,cellSize,WS):
     boundary = Con(inRaster, inTrueRaster, inFalseConstant, whereClause) #extract the boundary cells elevation from a DEM
     boundary.save('boundary1') #name of output boundary cell elevation raster
     return boundary
-main()
+
+if __name__ == '__main__':
+    main('Lyons.gdb', 'Scratch.gdb', 'Elevation', 'FloodExtent')
