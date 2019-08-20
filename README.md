@@ -30,7 +30,7 @@ versions of the scripts are located under
    
 ## How to use FwDET QGIS Plugin
 1. Clone this repository or download the
-[plugin file](fwdet/FwDET_QGIS.py).
+[plugin file](fwdet/FwDET_QGIS_plugin.py).
 2. Open QGIS and open the processing toolbox panel.
 3. Click on the small python logo in between the gears and clock icons,
    select add script to toolbox.
@@ -46,7 +46,7 @@ Sensing Analysis of Coastal Flooding
 Cohen, et al. (2017), Estimating Floodwater Depths from Flood
 Inundation Maps and Topography, _Journal of the American Water
 Resources Association_, 54 (4), 847–858.
-[doi:10.1111/1752-1688.12609](https://doi:10.1111/1752-1688.12609)
+[doi:10.1111/1752-1688.12609](https://doi.org/10.1111/1752-1688.12609)
 
 ### Contacts:
 [Sagy Cohen](mailto:sagy.cohen@ua.edu)
