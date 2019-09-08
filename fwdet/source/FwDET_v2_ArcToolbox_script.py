@@ -1,5 +1,5 @@
 '''
-InundationDepth_Coastal_CostAllocation.py
+InundationDepth.py
 
 Calculate water depth from a flood extent polygon (e.g. from remote sensing analysis) based on an underlying DEM (or HAND).
 Program procedure:
@@ -33,9 +33,11 @@ def main():
     WS = arcpy.env.workspace = script.GetParameterAsText(0)
     #THIS STILL NEEDS TO BE SET
     arcpy.env.scratchWorkspace = script.GetParameterAsText(0)
+    #WS = arcpy.env.workspace = r"W:\SDML\Documents\austin_raney\180918_nigeria\onitsha_otuochaaguleri_enuguotu\input.gdb"
+    #scratch = arcpy.env.scratchWorkspace = r"W:\SDML\Documents\austin_raney\180918_nigeria\onitsha_otuochaaguleri_enuguotu\scratch.gdb"
     DEMname = os.path.basename(script.GetParameterAsText(2))
     InundPolygon = os.path.basename(script.GetParameterAsText(1))
-    ClipDEM = os.path.basename(script.GetParameterAsText(3))
+    ClipDEM = script.GetParameterAsText(3) if script.GetParameterAsText(3) else 'ClipDEM'
     dem = arcpy.Raster(DEMname)
     CostRaster = (((dem < 0)*9)+1)
     CostRaster.save(WS+'\CostRaster')
@@ -44,10 +46,8 @@ def main():
     boundary = CalculateBoundary(dem, InundPolygon, cellSize, WS)
     #this will have to be uncommented for later areas
 
-    #boundary = Raster('boundary_elev')  # a raster layer with only the boundary cells having value (elevation)
-    #extent = str(dem.extent.XMin) + " " + str(dem.extent.YMin) + " " + str(dem.extent.XMax) + " " + str(dem.extent.YMax)
     extent = '{} {} {} {}'.format(dem.extent.XMin,dem.extent.YMin,dem.extent.XMax,dem.extent.YMax)
-    #arcpy.Clip_management(DEMname, extent, ClipDEM, InundPolygon, cellSize, 'ClippingGeometry', 'NO_MAINTAIN_EXTENT')
+    arcpy.Clip_management(DEMname, extent, ClipDEM, InundPolygon, cellSize, 'ClippingGeometry', 'NO_MAINTAIN_EXTENT')
     arcpy.env.extent = arcpy.Extent(dem.extent.XMin, dem.extent.YMin, dem.extent.XMax, dem.extent.YMax)
     print 'Conversion to Integer'
     boundaryInt = Int(boundary * 10000)
@@ -93,3 +93,5 @@ stop = timeit.default_timer()
 print 'start: ', start, '\n'
 print 'End: ', stop, '\n'
 print 'Run time: ', (stop - start)/60, 'min'
+
+

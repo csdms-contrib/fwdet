@@ -1,4 +1,4 @@
-# This Python file uses the following encoding: utf-8
+# This Python file uses the following en#############
 '''
 InundationDepth.py
 
@@ -35,7 +35,7 @@ def main():
     DEMname = os.path.basename(script.GetParameterAsText(1))
     InundPolygon = os.path.basename(script.GetParameterAsText(2))
     i_count = int(script.GetParameterAsText(3))
-    ClipDEM = 'ClipDEM'
+    ClipDEM = script.GetParameterAsText(4) if script.GetParameterAsText(4) else 'ClipDEM'
     dem = arcpy.Raster(DEMname)
 
     # Generate boundary from provided DEM 
@@ -81,3 +81,5 @@ def CalculateBoundary(dem, InundPolygon,cellSize,WS, outputName):
     boundary.save(outputName)
     return outputName
 main()
+
+
