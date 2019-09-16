@@ -44,11 +44,11 @@ def main():
     inund_polygon = os.path.basename(script.GetParameterAsText(1))
 
     # If this is not provided, the clip_dem will be calculated with the Clip_management function
-    clip_dem = script.GetParameterAsText(3)
+    clip_dem = script.GetParameterAsText(4)
 
     # Check if optional Cost Raster was provided
-    if script.GetParameterAsText(4):
-        cost_raster = script.GetParameterAsText(4)
+    if script.GetParameterAsText(5):
+        cost_raster = script.GetParameterAsText(5)
     else:
         cost_raster = (((dem <= 0)*999)+1)
         cost_raster.save(ws + '\cost_raster')
@@ -104,14 +104,14 @@ def main():
 
     # Remove estimated water depths below 0 and change them to 0
     water_depth = Con(water_depth <= 0, 0, water_depth)
-    water_depth.save(os.path.basename(script.GetParameterAsText(4)))
+    water_depth.save(os.path.basename(script.GetParameterAsText(3)))
 
     print('Calculating low pass filter')
 
     water_depth_filtered = Filter(water_depth, 'LOW', 'DATA')
 
     waterDepthFilter2 = Con(clip_dem, water_depth_filtered, '#', 'VALUE > 0')
-    waterDepthFilter2.save(os.path.basename(script.GetParameterAsText(4))+'_filtered')
+    waterDepthFilter2.save(os.path.basename(script.GetParameterAsText(3))+'_filtered')
     print('Done')
 
 
@@ -178,5 +178,3 @@ stop = timeit.default_timer()
 print('start: ', start, '\n')
 print('End: ', stop, '\n')
 print('Run time: ', (stop - start)/60, 'min')
-
-
