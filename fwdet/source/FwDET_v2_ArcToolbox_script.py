@@ -148,10 +148,7 @@ def CalculateBoundary(dem, inund_polygon, cell_size, ws):
     arcpy.PolylineToRaster_conversion(ws + '\\polyline', 'OBJECTID', ws + '\linerast15',
                                       'MAXIMUM_LENGTH', 'NONE', cell_size)
 
-    raster_polyline = Raster(ws+'\linerast15')
-
-    # TODO: Can this be removed?
-    # inTrueRaster = dem
+    raster_polyline = Raster(ws + '\linerast15')
 
     # The input whose values will be used as the output cell values if the condition is false.
     input_false_constant = '#'
