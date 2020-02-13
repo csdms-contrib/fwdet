@@ -4,6 +4,9 @@ from arcpy.sa import *
 import timeit
 import os
 
+# Checkout the Spatial Analyst Toolkit
+arcpy.CheckOutExtension('Spatial')
+
 # From p. 281 of python scripting for ArcGis
 script = arcgisscripting.create(9.3)
 
@@ -57,8 +60,6 @@ def main():
     # END INPUT/OUTPUT #
     ####################
 
-    # Checkout the Spatial Analyst Toolkit
-    arcpy.CheckOutExtension('Spatial')
 
     # Set overriding within the Workspace to True
     arcpy.env.overwriteOutput = True
