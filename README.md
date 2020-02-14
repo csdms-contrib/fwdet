@@ -1,3 +1,8 @@
+# Updates:
+Now supporting:
+	- >= ArcGis 10.5
+	- ArcGis Pro
+
 # Floodwater Depth Estimation Tool
 The Floodwater Depth Estimation Tool (FwDET) calculates floodwater
 depths using a digital elevation model (DEM) and a flood extent
@@ -11,14 +16,13 @@ different approach that is considerably more computationally
 efficient, drastically reducing run time compared to version 1 of the
 tool.
 
-FwDET can be executed either as a standalone Python script or via a
-toolbox in ArcMap (v1 & v2) or QGIS (v1). Version 1 and 2 have been
-implemented via Arcpy scripts and an ArcMap 10.6 Toolbox. Version 1
-also has both a standalone and plugin open-source QGIS version, that
-out preforms the ArcMap computationally. The plugin/toolbox versions
-can be found inside the [fwdet](fwdet) directory. The standalone
-versions of the scripts are located under
-[fwdet/source](fwdet/source).
+FwDET can be executed either as a standalone Python script or via a toolbox in
+ArcMap (v1 & v2) or QGIS (v1). Version 1 and 2 have been implemented via Arcpy
+scripts and Arc Toolboxs with version support for >= ArcGis 10.5 and ArcGis Pro.
+Version 1 also has both a standalone and plugin open-source QGIS version, that
+out preforms the ArcMap computationally. The plugin/toolbox versions can be
+found inside the [fwdet](fwdet) directory. The standalone versions of the
+scripts are located under [fwdet/source](fwdet/source).
 
 ## How to use FwDET ArcMap Toolbox
 1. Clone this repository or download the 
