@@ -3,6 +3,9 @@ import arcgisscripting
 from arcpy.sa import *
 import timeit
 
+# Checkout the Spatial Analyst Toolkit
+arcpy.CheckOutExtension('Spatial')
+
 # from p281 of python scripting for arcgis
 script = arcgisscripting.create(9.3)
 
@@ -50,9 +53,6 @@ def main(ws_path, dem_path, extent_path, clip_dem='clipDEM', cost_raster=''):
     ####################
     # END INPUT/OUTPUT #
     ####################
-
-    # Checkout the Spatial Analyst Toolkit
-    arcpy.CheckOutExtension('Spatial')
 
     # Set overriding within the Workspace to True
     arcpy.env.overwriteOutput = True
