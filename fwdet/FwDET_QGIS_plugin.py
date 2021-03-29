@@ -131,6 +131,10 @@ class FWDET(QgsProcessingAlgorithm):
         """
         # Retrieve parameters from the gui
         OUTPUTFOLDER = self.parameterAsFile(parameters, self.FLOOD_DEPTH_OUTPUT, context)
+
+        if parameters["FLOOD_DEPTH_OUTPUT"] == "TEMPORARY_OUTPUT":
+            OUTPUTFOLDER = os.path.dirname(OUTPUTFOLDER)
+
         DEM = self.parameterAsRasterLayer(parameters, self.DEM_INPUT, context).source()
         INUNDPOLYGON = self.parameterAsVectorLayer(parameters, self.FLOOD_POLYGON_INPUT, context).source()
         
@@ -236,6 +240,7 @@ class FWDET(QgsProcessingAlgorithm):
                                            '(({1} - {0}) > 0) * ({1} - {0})', 0, fname='waterDepth.tif')
         feedback.setProgress(84)
 
+        # filter inputs will need to change once gaussianfilter wrapper is updated to saga >= 4
         processing.run("saga:gaussianfilter", gaussian_filter_input, context=context, feedback=feedback)
 
         feedback.setProgress(100)
