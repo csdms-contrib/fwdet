@@ -27,8 +27,8 @@ scripts are located under [fwdet/source](fwdet/source).
 ## How to use FwDET ArcMap/Pro Toolbox
 1. Clone this repository or download the 
 [toolbox file](fwdet/FwDET.tbx).
-2. Open ArcMap and navigate using the catalog to the directory
-   containing `FwDET.tbx`.
+2. Open ArcMap/Pro and navigate using the catalog to the directory
+   containing `FwDET.tbx` or `FwDET_ArcGISPro.tbx`.
 3. Expand the toolbox and double click on the tool version you wish to
    use.
    
