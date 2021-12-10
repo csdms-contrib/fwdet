@@ -24,7 +24,7 @@ out preforms the ArcMap computationally. The plugin/toolbox versions can be
 found inside the [fwdet](fwdet) directory. The standalone versions of the
 scripts are located under [fwdet/source](fwdet/source).
 
-## How to use FwDET ArcMap Toolbox
+## How to use FwDET ArcMap/Pro Toolbox
 1. Clone this repository or download the 
 [toolbox file](fwdet/FwDET.tbx).
 2. Open ArcMap and navigate using the catalog to the directory
