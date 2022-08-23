@@ -1,0 +1,185 @@
+/* ------------------------------------------------------------------------------------
+FwDET-GEE-v2 is an update and improvement to FwDET-GEE (Peter et al. 2020a; Peter et al. 
+2020b). FwDET was conceptualized by Sagy Cohen (University of Alabama, Department of 
+Geography) and prepared for use in ArcGIS (Cohen et al. 2019). FwDET-GEE was adapted for
+use in Google Earth Engine by Brad G. Peter (University of Arkansas, Department of 
+Geosciences).
+
+Cohen, S., Raney, A., Munasinghe, D., Loftis, J.D., Molthan, A., Bell, J., Rogers, L., 
+Galantowicz, J., Brakenridge, G.R., Kettner, A.J. and Huang, Y.F., 2019. The Floodwater 
+Depth Estimation Tool (FwDET v2. 0) for improved remote sensing analysis of coastal 
+flooding. Natural Hazards and Earth System Sciences, 19(9), pp.2053-2065.
+
+Peter, B.G., Cohen, S., Lucey, R., Munasinghe, D., Raney, A. and Brakenridge, G.R., 2020b. 
+Google Earth Engine Implementation of the Floodwater Depth Estimation Tool (FwDET-GEE) 
+for rapid and large scale flood analysis. IEEE Geoscience and Remote Sensing Letters.
+
+Peter, Brad; Cohen, Sagy; Lucey, Ronan; Munasinghe, Dinuke; Raney, Austin, 2020a, 
+"A Google Earth Engine implementation of the Floodwater Depth Estimation Tool 
+(FwDET-GEE)", https://doi.org/10.7910/DVN/JQ4BCN, Harvard Dataverse, V5.
+-------------------------------------------------------------------------------------*/
+
+// Input ------------------------------------------------------------------------------
+
+// Flood extent layer (must be a raster image)
+var floodLayer = ee.Image('users/cartoscience/FwDET-GEE-v2/FID01_USGSFIM_LA_BatonRouge')
+
+var demSource = 'NED'  // See parameterization options in the following section
+var testNumber = 'T31' // See parameterization options in the following section
+                       // or specify custom test parameters below (customTest)
+
+              // [slope filter, slope filter option ('TRUE' or 'FALSE'), 
+              //  number of iterations, iterations option ('TRUE' or 'FALSE')]
+var customTest = [0.5,'TRUE',10,'TRUE']
+var customSelect = 'TRUE' // set to 'TRUE' to run custom parameters
+                          // 'FALSE' will use parameter set above (testNumber)
+
+// Export options
+var fileSuffix = '08222022'
+var exportFolder = 'GEE_export'
+
+// FwDET-GEE-v2 •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+// Parameters -------------------------------------------------------------------------
+var demOptions = {
+  'NED': ['USGS/NED','elevation'],
+  'NASADEM': ['NASA/NASADEM_HGT/001','elevation'],
+  'ALOS': ['JAXA/ALOS/AW3D30/V2_2','AVE_DSM'],
+  'SRTM30': ['USGS/SRTMGL1_003','elevation'],
+  'SRTM90': ['CGIAR/SRTM90_V4','elevation'],
+  'WWF': ['WWF/HydroSHEDS/03VFDEM','b1'],
+  'MERIT': ['MERIT/DEM/v1_0_3','dem'],
+  'ASTER': ['NASA/ASTER_GED/AG100_003','elevation']
+}
+
+      // [slope filter, slope filter option ('TRUE' or 'FALSE'), 
+      //  number of iterations, iterations option ('TRUE' or 'FALSE')]
+var testParams = {
+  'T01': [0.5,'TRUE',1,'TRUE'],
+  'T02': [0.5,'TRUE',2,'TRUE'],
+  'T03': [0.5,'TRUE',3,'TRUE'],
+  'T04': [0.5,'TRUE',4,'TRUE'],
+  'T05': [0.5,'TRUE',5,'TRUE'],
+  'T06': [1,'TRUE',1,'TRUE'],
+  'T07': [1,'TRUE',2,'TRUE'],
+  'T08': [1,'TRUE',3,'TRUE'],
+  'T09': [1,'TRUE',4,'TRUE'],
+  'T10': [1,'TRUE',5,'TRUE'],
+  'T11': [1.5,'TRUE',1,'TRUE'],
+  'T12': [1.5,'TRUE',2,'TRUE'],
+  'T13': [1.5,'TRUE',3,'TRUE'],
+  'T14': [1.5,'TRUE',4,'TRUE'],
+  'T15': [1.5,'TRUE',5,'TRUE'],
+  'T16': [2,'TRUE',1,'TRUE'],
+  'T17': [2,'TRUE',2,'TRUE'],
+  'T18': [2,'TRUE',3,'TRUE'],
+  'T19': [2,'TRUE',4,'TRUE'],
+  'T20': [2,'TRUE',5,'TRUE'],
+  'T21': [2.5,'TRUE',1,'TRUE'],
+  'T22': [2.5,'TRUE',2,'TRUE'],
+  'T23': [2.5,'TRUE',3,'TRUE'],
+  'T24': [2.5,'TRUE',4,'TRUE'],
+  'T25': [2.5,'TRUE',5,'TRUE'],
+  'T26': ['x','FALSE',1,'TRUE'],
+  'T27': ['x','FALSE',2,'TRUE'],
+  'T28': ['x','FALSE',3,'TRUE'],
+  'T29': ['x','FALSE',4,'TRUE'],
+  'T30': ['x','FALSE',5,'TRUE'],
+  'T31': ['x','FALSE','x','FALSE']
+}
+
+// Preprocessing •••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+// Retrieving parameters ---------------------------------------------------------------
+var test = testParams[testNumber]
+if (customSelect == 'TRUE') {
+  test = customTest
+}
+var filterBounds = test[3]
+var iterations = test[2]
+var filterSlope = test[1]
+var slopeThreshold = test[0]
+var filterKernel = 5
+
+// Layer and DEM extraction ------------------------------------------------------------
+var layerMask = floodLayer.gt(0)
+var layerPrj = floodLayer.projection().nominalScale()
+var aoi = floodLayer.geometry().bounds().buffer(1000).bounds()
+var demFields = demOptions[demSource]
+var dem = ee.Image(demFields[0]).select(demFields[1]).clip(aoi)
+var prj = dem.projection()
+var res = prj.nominalScale()
+
+// Flood modification ------------------------------------------------------------------
+var flood = floodLayer.reproject(prj).rename('flood')
+var floodMask = flood.mask().not()
+var floodExtent = floodMask.updateMask(floodMask.eq(0))
+var expand = floodExtent.focal_max(res,'square','meters')
+var mask = expand.mask().add(floodExtent.mask())
+var demEdge = dem.updateMask(mask.eq(1))
+var demE = demEdge
+
+// Slope and focal statistics filter ---------------------------------------------------
+if (filterSlope == 'TRUE') {
+  var slopeMask = ee.Terrain.slope(dem).gt(slopeThreshold)
+  demEdge = demEdge.updateMask(slopeMask.eq(0))
+}
+
+var edgeMod = demEdge
+if (filterBounds == 'TRUE') {
+  for (var i = 0; i < iterations; i++) {
+    edgeMod = edgeMod.focal_mean(res.multiply(filterKernel),'square','meters')
+  }
+  dem = dem.where(demE,edgeMod)
+}
+
+// FwDET-GEE-v2 ••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+
+// Cumulative cost interpolation -------------------------------------------------------
+var mod = dem.updateMask(floodExtent.mask().eq(0))
+var source = mod.mask()
+var val = 10000
+var push = 5000
+var cost0 = ee.Image(val).where(source,0).cumulativeCost(source,push)
+var cost1 = ee.Image(val).where(source,1).cumulativeCost(source,push)
+var cost2 = mod.unmask(val).cumulativeCost(source,push)
+var costFill = cost2.subtract(cost0).divide(cost1.subtract(cost0))
+var costSurface = mod.unmask(0).add(costFill)
+var costDepth = costSurface.subtract(dem)
+
+costDepth = costDepth.convolve(
+  ee.Kernel.square({
+    radius: res.multiply(3), 
+    units: 'meters', 
+    normalize: true
+  })
+)
+
+
+// FwDET-GEE-v2 cleaning and visualization ---------------------------------------------
+var fwdet = costDepth.where(costDepth.lt(0),0).rename('FwDET-GEE-v2')
+  .updateMask(floodLayer)
+
+var histFwDET = ui.Chart.image.histogram({
+  image: fwdet.updateMask(fwdet.neq(0)),
+  region: fwdet.geometry(),
+  scale: res,
+  maxPixels: 1e13
+})
+
+print(histFwDET)
+Map.addLayer(layerMask.updateMask(layerMask.eq(1)), {palette:'red'}, 'inundation extent', false)
+Map.addLayer(fwdet, {min: 0, max: 5, palette: ['white','blue','purple']}, 'fwdet')
+Map.setOptions('HYBRID').centerObject(fwdet)
+
+// FwDET-GEE-v2 layer export -----------------------------------------------------------
+var naming = 'FwDET-GEE-v2_'+fileSuffix
+Export.image.toDrive({
+  image: fwdet,
+  description: naming,
+  folder: exportFolder,
+  fileNamePrefix: naming,
+  region: fwdet.geometry(),
+  scale: res,
+  maxPixels: 1e13
+})
