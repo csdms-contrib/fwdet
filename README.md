@@ -1,6 +1,11 @@
+# Floodwater Depth Estimation Tool (FwDET)
+Calculates floodwater depths using a digital elevation model (DEM) and a flood extent polygon
+
+![screen capture](/assets/remotesensing-14-05313-g009.png)
+
 # Updates:
 ### 2023-10-20
-Implemented in [QGIS as a processing script](qgis/README.md))
+Implemented in [QGIS as a processing script](qgis/README.md)
 
 ### 2022-08-24
 Implemented in:
@@ -8,11 +13,8 @@ Implemented in:
 	- ArcGis Pro
 	- Google Earth Engine
     
-
-# Floodwater Depth Estimation Tool (FwDET)
-The Floodwater Depth Estimation Tool (FwDET) calculates floodwater
-depths using a digital elevation model (DEM) and a flood extent
-polygon shapefile. Within this repository resides the three versions of
+# Description
+Within this repository resides the three versions of
 FwDET. Version 1, featured in Estimating Floodwater Depths from Flood
 Inundation Maps and Topography [Cohen et al. 2018], best works in
 inland riverine regions and has been implemented using both Arcpy and
@@ -38,7 +40,7 @@ see [qgis/README.md](qgis/README.md)
 
 
 # Related Publications:
-[Cohen et al. 2022](https://doi.org/10.3390/rs14215313)  Sensitivity of Remote Sensing Floodwater Depth Calculation to Boundary Filtering and Digital Elevation Model Selections
+[Cohen et al. 2022](https://doi.org/10.3390/rs14215313)  Sensitivity of Remote Sensing Floodwater Depth Calculation to Boundary Filtering and Digital Elevation Model Selections. _Remote Sensing_
 
 [Peter et al. 2020](https://doi.org/10.1109/LGRS.2020.3031190) Google Earth Engine 
 Implementation of the Floodwater Depth Estimation Tool (FwDET-GEE) for Rapid and Large Scale Flood Analysis. 
@@ -48,10 +50,9 @@ _IEEE Geoscience and Remote Sensing Letters._
 Floodwater Depth Estimation Tool (FwDET v2.0) for Improved Remote
 Sensing Analysis of Coastal Flooding. _Natural Hazards and Earth System Sciences_, 19, 2053–2065. 
 
-Cohen, et al. (2017), Estimating Floodwater Depths from Flood
+[Cohen, et al. (2017)](https://doi.org/10.1111/1752-1688.12609), Estimating Floodwater Depths from Flood
 Inundation Maps and Topography, _Journal of the American Water
 Resources Association_, 54 (4), 847–858.
-[doi:10.1111/1752-1688.12609](https://doi.org/10.1111/1752-1688.12609)
 
 # Contacts:
 [Sagy Cohen](mailto:sagy.cohen@ua.edu)
