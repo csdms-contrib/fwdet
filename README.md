@@ -16,7 +16,7 @@ coastal flooding as well as fluvial [Cohen et al. 2019]. Version 2 implements a 
 different approach that is considerably more computationally
 efficient, drastically reducing run time compared to version 1 of the
 tool. Version 2.1 introduces a boundary cell smoothing and filtering procedure whicn
-improves the tool's accuracy.
+improves the tool's accuracy [Cohen et al. 2022].
 
 
 ## How to use FwDET ArcMap/Pro Toolbox
@@ -28,16 +28,12 @@ improves the tool's accuracy.
    use.
    
 ## How to use FwDET QGIS Plugin
-1. Clone this repository or download the
-[plugin file](fwdet/FwDET_QGIS_plugin.py).
-2. Open QGIS and open the processing toolbox panel.
-3. Click on the small python logo in between the gears and clock icons,
-   select add script to toolbox.
-4. Expand the `Scripts` folder inside of the toolbox panel and open the folder
-   `FwDET` and double click on `FwDET v1`.
+see [qgis/README.md](qgis/README.md)
 
 
 ### Publications from this work:
+[Cohen et al. 2022](https://doi.org/10.3390/rs14215313)  Sensitivity of Remote Sensing Floodwater Depth Calculation to Boundary Filtering and Digital Elevation Model Selections
+
 [Peter et al. 2020](https://doi.org/10.1109/LGRS.2020.3031190) Google Earth Engine 
 Implementation of the Floodwater Depth Estimation Tool (FwDET-GEE) for Rapid and Large Scale Flood Analysis. 
 _IEEE Geoscience and Remote Sensing Letters._
