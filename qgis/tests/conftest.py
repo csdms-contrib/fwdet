@@ -11,6 +11,9 @@ from pytest_qgis.utils import clean_qgis_layer
 from qgis.core import (
     QgsRasterLayer, QgsProject, QgsProcessingFeedback, QgsProcessingContext, Qgis, 
     QgsSettings, QgsApplication, QgsVectorLayer,
+    QgsProcessingFeatureSource,
+    QgsFeatureSource,
+    QgsProcessingFeatureSourceDefinition
     )
 
 print(u'QGIS version: %s, release: %s'%(Qgis.QGIS_VERSION.encode('utf-8'), Qgis.QGIS_RELEASE_NAME.encode('utf-8')))
@@ -23,7 +26,7 @@ assert os.path.exists(test_data_dir)
 
 test_data_lib = {
     'PeeDee':{
-        'INUN_VLAY':'WaterExtent_fixed.gpkg',
+        'INUN_VLAY':'WaterExtent_fixed.geojson',
         'INPUT_DEM':'NEDelevation.tif'
         
         }
@@ -42,7 +45,7 @@ def get_fp(caseName, layName):
 
 
 class MyFeedBackQ(QgsProcessingFeedback):
-    """special feedback object for testing"""
+    """custom feedback object for testing"""
     
     def __init__(self,logger, *args, **kwargs):        
         self.logger=logger.getChild('FeedBack')        
@@ -53,6 +56,9 @@ class MyFeedBackQ(QgsProcessingFeedback):
         
     def pushDebugInfo(self, info):
         self.logger.debug(info)
+        
+    def pushWarning(self, txt):
+        self.logger.warning(txt)
     
 #===============================================================================
 # fixtures
@@ -102,15 +108,35 @@ def context(qproj):
  
 @pytest.fixture(scope='function')
 @clean_qgis_layer
-def INUN_VLAY(caseName, qproj):
+def INUN_VLAY(caseName, qproj, context):
     fp =  get_fp(caseName, 'INUN_VLAY')
-    return QgsVectorLayer(fp, 'INUN_VLAY', 'ogr')
+    
+ 
+    #return QgsProcessingFeatureSourceDefinition(fp) 
+    
+    """QGIS uses QgsProcessingFeatureSource internally, 
+    but i dont think there isa  way to instance these in pyqgis
+    QgsVectorLayer should be close enough"""
+    return QgsVectorLayer(fp, 'INUN_VLAY', 'ogr') 
+    
+    
+    """this doesnt work... need to use QgsVectorLayers"""
+    
+    vlay = QgsVectorLayer(fp, 'INUN_VLAY', 'ogr')
+    if not vlay.isValid():
+        raise Exception(f"Layer failed to load: {fp}")
+     
+    return QgsProcessingFeatureSource(vlay, context)
+    help(QgsFeatureSource)
+    #return QgsVectorLayer(fp, 'INUN_VLAY', 'ogr')
  
 
 @pytest.fixture(scope='function')
 @clean_qgis_layer
 def INPUT_DEM(caseName, qproj):
     fp =  get_fp(caseName, 'INPUT_DEM')
+    
+    
     return QgsRasterLayer(fp, 'INPUT_DEM')
  
     

@@ -8,10 +8,11 @@ Created on Oct. 17, 2023
 import pytest, copy, os, gc
 from qgis.core import (
     QgsRasterLayer, QgsProject,
-    QgsProcessingOutputLayerDefinition, QgsApplication
+    QgsProcessingOutputLayerDefinition, QgsApplication,
+    
     )
 
-from definitions import wbt_exe
+ 
 from processing_scripts.fwdet_21 import FwDET as AlgoClass
 
 
@@ -24,14 +25,17 @@ def output_params(qproj):
         return QgsProcessingOutputLayerDefinition(sink='TEMPORARY_OUTPUT', destinationProject=qproj)
     
     return {
-        'OUTPUT_WaterDepth':get_out()
+        AlgoClass.OUTPUT_WSH:get_out(),
+        AlgoClass.OUTPUT_SHORE:get_out(),
+        AlgoClass.OUTPUT_WSH_SMOOTH:get_out(),
+        
         }
     
 
 @pytest.mark.dev 
 @pytest.mark.parametrize('caseName',['PeeDee'])
 @pytest.mark.parametrize('numIterations',[
-                                            #0,
+                                        #0,
                                           1,
                                           #5
                                           ])
@@ -45,7 +49,12 @@ def test_runner(
         numIterations, slopeTH, caseName, 
         output_params, context, feedback,
         ):
-    """test the main runner""" 
+    """test the main runner
+    
+    NOTE: wraps with '.Windows fatal exception: access violation'
+    but test still passes
+    
+    """ 
  
     
     #execute

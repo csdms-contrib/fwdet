@@ -10,3 +10,5 @@ qgis/.pydevproject
 __pycache__
 *.qgz
 *.aux.xml
+*.gpkg-*
+*.qmd
