@@ -9,9 +9,9 @@ Implemented in [QGIS as a processing script](qgis/README.md)
 
 ### 2022-08-24
 Implemented in:
-	- >= ArcGis 10.5
-	- ArcGis Pro
-	- Google Earth Engine
+- >= ArcGis 10.5
+- ArcGis Pro
+- Google Earth Engine
     
 # Description
 Within this repository resides the three versions of
@@ -50,7 +50,7 @@ _IEEE Geoscience and Remote Sensing Letters._
 Floodwater Depth Estimation Tool (FwDET v2.0) for Improved Remote
 Sensing Analysis of Coastal Flooding. _Natural Hazards and Earth System Sciences_, 19, 2053–2065. 
 
-[Cohen, et al. (2017)](https://doi.org/10.1111/1752-1688.12609), Estimating Floodwater Depths from Flood
+[Cohen et al. (2017)](https://doi.org/10.1111/1752-1688.12609), Estimating Floodwater Depths from Flood
 Inundation Maps and Topography, _Journal of the American Water
 Resources Association_, 54 (4), 847–858.
 
