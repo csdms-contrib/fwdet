@@ -22,7 +22,7 @@ QGIS. Version 2, features an improved algorithm which better solves
 coastal flooding as well as fluvial [Cohen et al. 2019]. Version 2 implements a much
 different approach that is considerably more computationally
 efficient, drastically reducing run time compared to version 1 of the
-tool. Version 2.1 introduces a boundary cell smoothing and filtering procedure whicn
+tool. Version 2.1 introduces a boundary cell smoothing and filtering procedure which
 improves the tool's accuracy [Cohen et al. 2022].
 
 # Installation
