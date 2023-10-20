@@ -1,10 +1,15 @@
 # Updates:
-Now supporting:
+### 2023-10-20
+Implemented in [QGIS as a processing script](qgis/README.md))
+
+### 2022-08-24
+Implemented in:
 	- >= ArcGis 10.5
 	- ArcGis Pro
 	- Google Earth Engine
+    
 
-# Floodwater Depth Estimation Tool
+# Floodwater Depth Estimation Tool (FwDET)
 The Floodwater Depth Estimation Tool (FwDET) calculates floodwater
 depths using a digital elevation model (DEM) and a flood extent
 polygon shapefile. Within this repository resides the three versions of
@@ -18,8 +23,9 @@ efficient, drastically reducing run time compared to version 1 of the
 tool. Version 2.1 introduces a boundary cell smoothing and filtering procedure whicn
 improves the tool's accuracy [Cohen et al. 2022].
 
+# Installation
 
-## How to use FwDET ArcMap/Pro Toolbox
+## ArcMap/Pro Toolbox
 1. Clone this repository or download the 
 [toolbox file](fwdet/FwDET.tbx).
 2. Open ArcMap/Pro and navigate using the catalog to the directory
@@ -27,11 +33,11 @@ improves the tool's accuracy [Cohen et al. 2022].
 3. Expand the toolbox and double click on the tool version you wish to
    use.
    
-## How to use FwDET QGIS Plugin
+## QGIS
 see [qgis/README.md](qgis/README.md)
 
 
-### Publications from this work:
+# Related Publications:
 [Cohen et al. 2022](https://doi.org/10.3390/rs14215313)  Sensitivity of Remote Sensing Floodwater Depth Calculation to Boundary Filtering and Digital Elevation Model Selections
 
 [Peter et al. 2020](https://doi.org/10.1109/LGRS.2020.3031190) Google Earth Engine 
@@ -47,10 +53,10 @@ Inundation Maps and Topography, _Journal of the American Water
 Resources Association_, 54 (4), 847–858.
 [doi:10.1111/1752-1688.12609](https://doi.org/10.1111/1752-1688.12609)
 
-### Contacts:
+# Contacts:
 [Sagy Cohen](mailto:sagy.cohen@ua.edu)
 
-### Other resources:
+# Other resources:
 
 [SDML Website](https://sdml.ua.edu)
 
