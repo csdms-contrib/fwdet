@@ -1,2 +1,14 @@
 .DS_Store
 .idea
+
+
+env
+qgis/definitions.py
+qgis/.project
+qgis/.pydevproject
+.settings
+__pycache__
+*.qgz
+*.aux.xml
+*.gpkg-*
+*.qmd
