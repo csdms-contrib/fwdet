@@ -29,8 +29,14 @@ test_data_lib = {
         'INUN_VLAY':'WaterExtent_fixed.geojson',
         'INPUT_DEM':'NEDelevation.tif'
         
+        },
+    'FtMac':{
+        'INUN_VLAY':'flood.geojson',
+        'INPUT_DEM':'bilinear.tif',
         }
     }
+
+ 
 
 #===============================================================================
 # helpers
@@ -109,6 +115,8 @@ def context(qproj):
 @pytest.fixture(scope='function')
 @clean_qgis_layer
 def INUN_VLAY(caseName, qproj, context):
+ 
+    
     fp =  get_fp(caseName, 'INUN_VLAY')
     
  

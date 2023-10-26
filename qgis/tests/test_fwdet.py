@@ -30,23 +30,33 @@ def output_params(qproj):
         AlgoClass.OUTPUT_WSH_SMOOTH:get_out(),
         
         }
+
+@pytest.mark.dev
+def test_init(context, feedback):
+        #execute
+    algo=AlgoClass()
+    algo.shortHelpString()
+    algo.initAlgorithm()
     
 
-@pytest.mark.dev 
-@pytest.mark.parametrize('caseName',['PeeDee'])
+ 
+@pytest.mark.parametrize('caseName, grow_distance',[
+    ('PeeDee','geodesic'),
+    ('FtMac', 'euclidean'),
+    ])
 @pytest.mark.parametrize('numIterations',[
-                                        #0,
+                                        0,
                                           1,
                                           #5
                                           ])
 @pytest.mark.parametrize('slopeTH',[
-                                    #0, 
+                                    0, 
                                     0.5
                                     ])
 def test_runner(
         INUN_VLAY, 
         INPUT_DEM,   
-        numIterations, slopeTH, caseName, 
+        numIterations, slopeTH, caseName, grow_distance,
         output_params, context, feedback,
         ):
     """test the main runner
@@ -61,7 +71,7 @@ def test_runner(
     algo=AlgoClass()
     algo.initAlgorithm()
     algo._init_algo(output_params, context, feedback)
-    res_d = algo.run_algo(INPUT_DEM, INUN_VLAY, numIterations, slopeTH)
+    res_d = algo.run_algo(INPUT_DEM, INUN_VLAY, numIterations, slopeTH, grow_distance)
      
     #validate
     assert isinstance(res_d, dict)
