@@ -38,19 +38,22 @@ improves the tool's accuracy [Cohen et al. 2022].
 ## QGIS
 see [qgis/README.md](qgis/README.md)
 
+## Development
+NOTE: project uses git lfs
+
 
 # Related Publications:
-[Cohen et al. 2022](https://doi.org/10.3390/rs14215313)  Sensitivity of Remote Sensing Floodwater Depth Calculation to Boundary Filtering and Digital Elevation Model Selections. _Remote Sensing_
+[Cohen et al. 2022](https://doi.org/10.3390/rs14215313), Sensitivity of Remote Sensing Floodwater Depth Calculation to Boundary Filtering and Digital Elevation Model Selections. _Remote Sensing_
 
-[Peter et al. 2020](https://doi.org/10.1109/LGRS.2020.3031190) Google Earth Engine 
+[Peter et al. 2020](https://doi.org/10.1109/LGRS.2020.3031190), Google Earth Engine 
 Implementation of the Floodwater Depth Estimation Tool (FwDET-GEE) for Rapid and Large Scale Flood Analysis. 
 _IEEE Geoscience and Remote Sensing Letters._
 
-[Cohen et al. 2019](https://doi.org/10.5194/nhess-2019-78) -- The
+[Cohen et al. 2019](https://doi.org/10.5194/nhess-2019-78), The
 Floodwater Depth Estimation Tool (FwDET v2.0) for Improved Remote
 Sensing Analysis of Coastal Flooding. _Natural Hazards and Earth System Sciences_, 19, 2053–2065. 
 
-[Cohen et al. (2017)](https://doi.org/10.1111/1752-1688.12609), Estimating Floodwater Depths from Flood
+[Cohen et al. 2017](https://doi.org/10.1111/1752-1688.12609), Estimating Floodwater Depths from Flood
 Inundation Maps and Topography, _Journal of the American Water
 Resources Association_, 54 (4), 847–858.
 

@@ -42,7 +42,9 @@ from qgis.core import (QgsProcessing,
 
 from qgis.analysis import QgsNativeAlgorithms, QgsRasterCalculatorEntry, QgsRasterCalculator
 
-import pandas as pd
+#import pandas as pd
+descriptions_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'descriptions')
+
  
 class FwDET(QgsProcessingAlgorithm):
     """FwDET 2.1 QGIS processing algorithim.
@@ -56,12 +58,15 @@ class FwDET(QgsProcessingAlgorithm):
     #input parameters
     numIterations = 'numIterations' #number of smoothing iterations
     slopeTH = 'slopeTH' #filtering slope threshold
+    grow_metric='grow_metric'
  
     #outputs
     OUTPUT_WSH = 'water_depth'
     OUTPUT_WSH_SMOOTH = 'water_depth_filtered'
     OUTPUT_SHORE='boundary'
  
+    #options
+    grow_metric_d = {'euclidean': 0,'squared': 1,'maximum': 2,'manhattan': 3,'geodesic': 4}
  
     def tr(self, string):
         """
@@ -80,7 +85,7 @@ class FwDET(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'fwdet'
+        return 'fwdet_v21'
 
     def displayName(self):
         """
@@ -107,28 +112,39 @@ class FwDET(QgsProcessingAlgorithm):
         return 'fwdet'
 
     def shortHelpString(self):
-        """
-        Returns a localised short helper string for the algorithm. This string
-        should provide a basic description about what the algorithm does and the
-        parameters and outputs associated with it..
-        """
-        return self.tr(
-            """
-            Floodwater Depth Estimation Tool (FwDET) v2.1 after Cohen et al. (2022) [doi:10.3390/rs14215313]. Calculates floodwater depths using a digital elevation model (DEM) and a flood extent polygon. This algorithm was ported from ArcPy and therefore may behave differently from the original. 
-            
-            
-            Tips and Tricks:
-            - try removing small holes (\'Delete Holes\') and islands (select by feature size and delete) from your inundation polygon
-            - read the log warnings carefully 
-            - if the tool is very slow, try running \'Simplify\' on the inundation polygon first or dividing the domain
-            
-            Algorithm steps:
-            1) clip and pre-check
-            2) compute the shore/boundary pixels (filtering, smoothing, etc.)
-            3) grow/extend the shore/boundary pixels onto the full domain
-            4) clip and subtract with DEM to compute depths
-            5) apply low-pass filter
-            """)
+        """return the help string by loading from an HTML file"""
+        
+        #get the filepath
+        fp = os.path.join(descriptions_dir, self.name()+'.html')
+        
+        #load the html description file
+        with open(fp, 'r') as file:
+            return self.tr(file.read())
+ 
+        
+ 
+ #==============================================================================
+ #        return self.tr(
+ #            """
+ #            <p>Floodwater Depth Estimation Tool (FwDET) v2.1 after Cohen et al. (2022) [doi:10.3390/rs14215313]. Calculates floodwater depths using a digital elevation model (DEM) and a flood extent polygon. This algorithm was ported from ArcPy and therefore may behave differently from the original. 
+ #                        
+ #            <b>Tips and Tricks<b>
+ #            - try removing small holes (\'Delete Holes\') and islands (select by feature size and delete) from your inundation polygon
+ #            - read the log warnings carefully 
+ #            - if the tool is very slow, try running \'Simplify\' on the inundation polygon first or dividing the domain
+ #            - for geographic CRS, try r.grow.distance metric = euclidean 
+ #            
+ # 
+ #            <b>Algorithm steps<b>
+ #            1) clip and pre-check
+ #            2) compute the shore/boundary pixels (filtering, smoothing, etc.)
+ #            3) grow/extend the shore/boundary pixels onto the full domain using r.grow.distance*
+ #            4) clip and subtract with DEM to compute depths
+ #            5) apply low-pass filter
+ #            
+ #            *https://grass.osgeo.org/grass82/manuals/r.grow.distance.html
+ #            """)
+ #==============================================================================
 
     def initAlgorithm(self, config=None):
         """
@@ -172,6 +188,14 @@ class FwDET(QgsProcessingAlgorithm):
                                              type=QgsProcessingParameterNumber.Double, minValue=0, maxValue=100)
         self.addParameter(param)
  
+ 
+        param = QgsProcessingParameterString(self.grow_metric, 'r.grow.distance metric', defaultValue='euclidean', optional=False)
+        
+        param.setMetadata( {'widget_wrapper':
+                  { 'value_hints': list(self.grow_metric_d.keys()) }
+                })
+        
+        self.addParameter(param)
  
         #=======================================================================
         # OUTPUTS------
@@ -261,6 +285,7 @@ class FwDET(QgsProcessingAlgorithm):
         #=======================================================================
         numIterations = self.parameterAsInt(params, self.numIterations,context)
         slopeTH = self.parameterAsDouble(params, self.slopeTH, context)
+        grow_metric = self.parameterAsString(params, self.grow_metric, context)
         
  
  
@@ -274,12 +299,12 @@ class FwDET(QgsProcessingAlgorithm):
         #=======================================================================.
  
  
-        return self.run_algo(input_dem, inun_vlay, numIterations, slopeTH)
+        return self.run_algo(input_dem, inun_vlay, numIterations, slopeTH, grow_metric)
         
 
         
         
-    def run_algo(self, dem_rlay_raw, inun_vlay, numIterations, slopeTH,
+    def run_algo(self, dem_rlay_raw, inun_vlay, numIterations, slopeTH, grow_distance,
                  #cost_raster=None,
                  ):
         """generate gridded depths from inundation polygon
@@ -385,9 +410,10 @@ class FwDET(QgsProcessingAlgorithm):
              'GRASS_RASTER_FORMAT_META' : '', 'GRASS_RASTER_FORMAT_OPT' : '', 'GRASS_REGION_CELLSIZE_PARAMETER' : 0, 'GRASS_REGION_PARAMETER' : None, 
              'distance' : 'TEMPORARY_OUTPUT',
               'input' : boundary, 
-              'metric' : 4, #geodesic
+              'metric' :self.grow_metric_d[grow_distance],
               'value' : 'TEMPORARY_OUTPUT' })['value']
               
+        assert os.path.exists(cost_alloc), f'grass7:r.grow.distance failed to produce a result on \n    {boundary}'
         #=======================================================================
         # clip/filter grown boundary w/ DEM-----
         #=======================================================================
