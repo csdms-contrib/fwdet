@@ -20,7 +20,7 @@ In the QGIS [Processing Toolbox](https://docs.qgis.org/3.22/en/docs/user_manual/
 Instructions are provided on the algorithm dialog
 
 ## 3 Example Data
-Example DEM and inundation polygon is provided in the [test_case\PeeDee](test_case/PeeDee) folder
+Example DEM and inundation polygon are provided in the [test_case\PeeDee](/test_case/PeeDee) folder (see [Issue #12](https://github.com/csdms-contrib/fwdet/issues/12)).
  
 
 ## 5 Development
