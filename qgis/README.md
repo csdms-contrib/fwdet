@@ -6,6 +6,9 @@ Tested against QGIS 3.28.11
 
 ## 1 Installation Instructions
 
+### Install QGIS with GRASS
+download and install the QGIS version shown above (other versions may also work) and ensure you have the GRASS processing provider enabled. 
+
 ### download the scripts
 download the algorithms of interest from the [processing_scripts folder](floodrescaler/processing_scripts) to your local machine
 
