@@ -10,7 +10,7 @@ Tested against QGIS 3.34.5
 download and install the QGIS version shown above (other versions may also work) and ensure you have the GRASS processing provider enabled. 
 
 ### download the scripts
-download [processing_scripts/fwdet_21.py](./qgis/processing_scripts/fwdet_21.py) script to your local machine
+download [processing_scripts/fwdet_21.py](./processing_scripts/fwdet_21.py) script to your local machine
 
 ### add to your QGIS profile
 In the QGIS [Processing Toolbox](https://docs.qgis.org/3.22/en/docs/user_manual/processing/toolbox.html#the-toolbox), select the python icon drop down ![Scripts](/qgis_port/assets/mIconPythonFile.png) , and `Add Script to Toolbox...` then point to the downloaded script. This should load new algorithms to the `Scripts/FwDET` group on the Processing Toolbox.
