@@ -16,3 +16,4 @@ __pycache__
 .pydevproject
 
 /issues
+qgis_port/test.py
