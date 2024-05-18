@@ -12,3 +12,8 @@ __pycache__
 *.aux.xml
 *.gpkg-*
 *.qmd
+.project
+.pydevproject
+
+/issues
+qgis_port/test.py

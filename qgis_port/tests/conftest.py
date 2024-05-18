@@ -7,7 +7,7 @@ Created on Oct. 24, 2022
 # IMPORTS------
 #===============================================================================
 import os, pathlib, pytest, logging, sys
-from pytest_qgis.utils import clean_qgis_layer
+#from pytest_qgis.utils import clean_qgis_layer
 from qgis.core import (
     QgsRasterLayer, QgsProject, QgsProcessingFeedback, QgsProcessingContext, Qgis, 
     QgsSettings, QgsApplication, QgsVectorLayer,
@@ -18,7 +18,10 @@ from qgis.core import (
 
 print(u'QGIS version: %s, release: %s'%(Qgis.QGIS_VERSION.encode('utf-8'), Qgis.QGIS_RELEASE_NAME.encode('utf-8')))
  
-from definitions import src_dir
+#from definitions import src_dir
+src_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+wrk_dir = os.path.expanduser('~')
 
 test_data_dir = os.path.join(src_dir, 'test_case')
 
@@ -26,13 +29,13 @@ assert os.path.exists(test_data_dir)
 
 test_data_lib = {
     'PeeDee':{
-        'INUN_VLAY':'WaterExtent_fixed.geojson',
-        'INPUT_DEM':'NEDelevation.tif'
+        'INUN_LAYER':'WaterExtent_fixed.geojson',
+        'INPUT_DEM_LAYER':'NEDelevation.tif'
         
         },
     'FtMac':{
-        'INUN_VLAY':'flood.geojson',
-        'INPUT_DEM':'bilinear.tif',
+        'INUN_LAYER':'flood.geojson',
+        'INPUT_DEM_LAYER':'bilinear.tif',
         }
     }
 
@@ -97,7 +100,7 @@ def qproj(qgis_app, qgis_processing):
     #         print(alg.id(), "->", alg.displayName())
     #===========================================================================
     """
-    from qgis import processing
+    from qgis_port import processing
     
     processing.run('wbt:ConvertNodataToZero', { 'input' : r'L:\09_REPOS\03_TOOLS\FloodRescaler\examples\Ahr2021\wse.tif', 'output' : 'TEMPORARY_OUTPUT' })
     """
@@ -113,11 +116,11 @@ def context(qproj):
     return QgsProcessingContext()
  
 @pytest.fixture(scope='function')
-@clean_qgis_layer
-def INUN_VLAY(caseName, qproj, context):
+#@clean_qgis_layer
+def INUN_LAYER(caseName, qproj, context):
  
     
-    fp =  get_fp(caseName, 'INUN_VLAY')
+    fp =  get_fp(caseName, 'INUN_LAYER')
     
  
     #return QgsProcessingFeatureSourceDefinition(fp) 
@@ -125,27 +128,27 @@ def INUN_VLAY(caseName, qproj, context):
     """QGIS uses QgsProcessingFeatureSource internally, 
     but i dont think there isa  way to instance these in pyqgis
     QgsVectorLayer should be close enough"""
-    return QgsVectorLayer(fp, 'INUN_VLAY', 'ogr') 
+    return QgsVectorLayer(fp, 'INUN_LAYER', 'ogr') 
     
     
     """this doesnt work... need to use QgsVectorLayers"""
     
-    vlay = QgsVectorLayer(fp, 'INUN_VLAY', 'ogr')
+    vlay = QgsVectorLayer(fp, 'INUN_LAYER', 'ogr')
     if not vlay.isValid():
         raise Exception(f"Layer failed to load: {fp}")
      
     return QgsProcessingFeatureSource(vlay, context)
     help(QgsFeatureSource)
-    #return QgsVectorLayer(fp, 'INUN_VLAY', 'ogr')
+    #return QgsVectorLayer(fp, 'INUN_LAYER', 'ogr')
  
 
 @pytest.fixture(scope='function')
-@clean_qgis_layer
-def INPUT_DEM(caseName, qproj):
-    fp =  get_fp(caseName, 'INPUT_DEM')
+#@clean_qgis_layer
+def INPUT_DEM_LAYER(caseName, qproj):
+    fp =  get_fp(caseName, 'INPUT_DEM_LAYER')
     
     
-    return QgsRasterLayer(fp, 'INPUT_DEM')
+    return QgsRasterLayer(fp, 'INPUT_DEM_LAYER')
  
     
  
