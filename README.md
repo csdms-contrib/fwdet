@@ -5,7 +5,7 @@ Calculates floodwater depths using a digital elevation model (DEM) and a flood e
 
 # Updates:
 ### 2023-10-20
-Implemented in [QGIS as a processing script](qgis_port/README.md)
+Implemented in [QGIS as a processing script](./qgis_port)
 
 ### 2022-08-24
 Implemented in:
