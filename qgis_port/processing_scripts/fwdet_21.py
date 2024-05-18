@@ -14,7 +14,7 @@
 
 __author__ = 'Seth Bryant'
 __date__ = 'October 2023'
-
+__version__ = '2024.05.18'
 
 
 import pprint, os, datetime, tempfile
@@ -119,32 +119,9 @@ class FwDET(QgsProcessingAlgorithm):
         
         #load the html description file
         with open(fp, 'r') as file:
-            return self.tr(file.read())
+            return self.tr(file.read() + f'\n    version {__version__}')
  
-        
  
- #==============================================================================
- #        return self.tr(
- #            """
- #            <p>Floodwater Depth Estimation Tool (FwDET) v2.1 after Cohen et al. (2022) [doi:10.3390/rs14215313]. Calculates floodwater depths using a digital elevation model (DEM) and a flood extent polygon. This algorithm was ported from ArcPy and therefore may behave differently from the original. 
- #                        
- #            <b>Tips and Tricks<b>
- #            - try removing small holes (\'Delete Holes\') and islands (select by feature size and delete) from your inundation polygon
- #            - read the log warnings carefully 
- #            - if the tool is very slow, try running \'Simplify\' on the inundation polygon first or dividing the domain
- #            - for geographic CRS, try r.grow.distance metric = euclidean 
- #            
- # 
- #            <b>Algorithm steps<b>
- #            1) clip and pre-check
- #            2) compute the shore/boundary pixels (filtering, smoothing, etc.)
- #            3) grow/extend the shore/boundary pixels onto the full domain using r.grow.distance*
- #            4) clip and subtract with DEM to compute depths
- #            5) apply low-pass filter
- #            
- #            *https://grass.osgeo.org/grass82/manuals/r.grow.distance.html
- #            """)
- #==============================================================================
 
     def initAlgorithm(self, config=None):
         """
@@ -218,10 +195,14 @@ class FwDET(QgsProcessingAlgorithm):
         )
         
         
+        
+        
     def _init_algo(self, params, context, feedback):
         """common init for tests"""
         self.proc_kwargs = dict(feedback=feedback, context=context, is_child_algorithm=True)
         self.context, self.feedback, self.params = context, feedback, params
+        
+        #self.feedback.pushInfo(f'initalized w/ v{__version__}')
 
     def processAlgorithm(self, params, context, feedback):
         """
@@ -230,7 +211,7 @@ class FwDET(QgsProcessingAlgorithm):
         #=======================================================================
         # defaults
         #=======================================================================
-        feedback.pushInfo('starting w/ \n%s'%(pprint.pformat(params, width=30)))
+        feedback.pushInfo(f'\n\nv{__version__} starting w/ \n%s\n\n'%(pprint.pformat(params, width=30)))
         
         self._init_algo(params, context, feedback)
         
