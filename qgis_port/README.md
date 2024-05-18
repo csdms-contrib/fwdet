@@ -2,7 +2,7 @@
 
 A QGIS Processing script to implement FwDET v2.1
 
-Tested against QGIS 3.28.11
+Tested against QGIS 3.34.5
 
 ## 1 Installation Instructions
 
@@ -25,15 +25,6 @@ Example DEM and inundation polygon are provided in the [test_case\PeeDee](/test_
 ## 5 Development
 create a virtual environment from the supported QGIS version and the `./requirements.txt` file. 
 
-add a ./definitions.py file similar to the below:
-
-```
-import pathlib, os
-
-src_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-wrk_dir = os.path.expanduser('~')
-```
 
 ## 6 Known Issues and Limitations
 
